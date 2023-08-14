@@ -1,0 +1,61 @@
+CREATE TABLE users(
+id INT PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(128) NOT NULL,
+surname VARCHAR(128) NOT NULL,
+father_name VARCHAR(128) NOT NULL,
+DOB DATE NOT NULL,
+sex VARCHAR(8) NOT NULL,
+CONSTRAINT MaleFemaleCheck CHECK (sex = "Male" OR sex = "Female")
+);
+
+CREATE TABLE catalog(
+id INT PRIMARY KEY AUTO_INCREMENT,
+brand VARCHAR(64) NOT NULL,
+model VARCHAR(64) NOT NULL,
+release_date DATE NOT NULL,
+price DOUBLE
+);
+
+ALTER TABLE catalog
+ADD CONSTRAINT brand_model_uniq UNIQUE(brand, model);
+
+CREATE TABLE volume(
+id INT PRIMARY KEY AUTO_INCREMENT,
+vol FLOAT UNIQUE NOT NULL
+);
+
+CREATE TABLE color(
+id INT PRIMARY KEY AUTO_INCREMENT,
+color VARCHAR(16) UNIQUE NOT NULL
+);
+
+CREATE TABLE car_color(
+id_car INT NOT NULL,
+id_color INT NOT NULL,
+PRIMARY KEY(id_car, id_color),
+FOREIGN KEY (id_car) REFERENCES catalog(id) ON DELETE CASCADE,
+FOREIGN KEY (id_color) REFERENCES color(id) ON DELETE CASCADE
+);
+
+CREATE TABLE car_volume(
+id_car INT NOT NULL,
+id_volume INT NOT NULL,
+PRIMARY KEY(id_car, id_volume),
+FOREIGN KEY (id_car) REFERENCES catalog(id) ON DELETE CASCADE,
+FOREIGN KEY (id_volume) REFERENCES volume(id) ON DELETE CASCADE
+);
+
+CREATE TABLE orders(
+id INT PRIMARY KEY AUTO_INCREMENT,
+id_user INT,
+id_car INT,
+id_vol INT,
+id_color INT,
+date_buy DATE NOT NULL,
+FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
+FOREIGN KEY (id_car) REFERENCES catalog(id) ON DELETE SET NULL,
+FOREIGN KEY (id_vol) REFERENCES volume(id) ON DELETE SET NULL,
+FOREIGN KEY (id_color) REFERENCES color(id) ON DELETE SET NULL
+);
+
+
